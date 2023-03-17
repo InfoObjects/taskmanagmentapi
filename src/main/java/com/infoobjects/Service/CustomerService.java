@@ -26,16 +26,6 @@ public class CustomerService implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException(
                         "User not found with username or email: " + usernameOrEmail));
 
-        // Set<GrantedAuthority> authorities = user
-        // // .getRoles()
-        // .stream()
-        // .map((role) -> new
-        // SimpleGrantedAuthority(role.getName())).collect(Collectors.toSet());
-
-        // return new
-        // org.springframework.security.core.userdetails.User(user.getEmail(),
-        // user.getPassword(),
-        // authorities);
         return null;
     }
 }
