@@ -13,6 +13,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,10 +21,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collections;
 
+@Controller // on presentation layer
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/api/auth") // bydefault method is get
 public class AuthoController {
-    @Autowired
+    // @component - this is take care of that class obj life cycle we don't need to
+    // declared a obj here by bean basically spring ka component bn jata h
+    @Autowired // @Bean Type match krega simple
     private AuthenticationManager authenticationManager;
     @Autowired
     private UserRepo userRepository;
@@ -38,6 +42,7 @@ public class AuthoController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
         return new ResponseEntity<>("User signed-in successfully!.", HttpStatus.OK);
     }
+    // @Requestparam is for fetching the data through a web page
 
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@RequestBody SignupDto signUpDto) {

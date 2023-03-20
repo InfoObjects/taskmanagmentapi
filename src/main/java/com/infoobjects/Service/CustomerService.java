@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+//@Service Annotation is it can be applied only to classes. 
 @Service
 public class CustomerService implements UserDetailsService {
     private UserRepo userRepository;
