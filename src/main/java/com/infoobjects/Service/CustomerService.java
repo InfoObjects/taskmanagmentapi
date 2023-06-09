@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-//@Service Annotation is it can be applied only to classes. 
+//@Service Annotation is it can be applied only to classes.
 @Service
 public class CustomerService implements UserDetailsService {
     private UserRepo userRepository;
@@ -23,10 +23,17 @@ public class CustomerService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String usernameOrEmail) throws UsernameNotFoundException {
-        User user = userRepository.findByUsernameOrEmail(usernameOrEmail, usernameOrEmail)
+        User user = userRepository.findByUsernameOrEmail(usernameOrEmail,
+                usernameOrEmail)
                 .orElseThrow(() -> new UsernameNotFoundException(
                         "User not found with username or email: " + usernameOrEmail));
+        Set<GrantedAuthority> authorities = user.getRoles()
+                .stream()
+                .map((role) -> new SimpleGrantedAuthority(user.getName())).collect(Collectors.toSet());
 
-        return null;
+        // return null;
+        return new org.springframework.security.core.userdetails.User(user.getEmail(),
+                user.getPassword(),
+                authorities);
     }
 }

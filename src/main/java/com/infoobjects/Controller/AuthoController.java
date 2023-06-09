@@ -63,7 +63,7 @@ public class AuthoController {
         user.setEmail(signUpDto.getEmail());
         user.setPassword(passwordEncoder.encode(signUpDto.getPassword()));
 
-        User users = userRepository.findByName("ROLE_ADMIN").get();
+        // User users = userRepository.findByName("ROLE_ADMIN").get();
         // user.setRoles(Collections.singleton(roles));
 
         userRepository.save(user);

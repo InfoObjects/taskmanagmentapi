@@ -3,6 +3,8 @@ package com.infoobjects.Entity;
 import lombok.Data;
 
 import jakarta.persistence.*;
+
+import java.util.Optional;
 import java.util.Set;
 
 @Data
@@ -19,5 +21,9 @@ public class User {
     private String username;
     private String email;
     private String password;
+
+    public static Optional<User> getRoles() {
+        return null;
+    }
 
 }
