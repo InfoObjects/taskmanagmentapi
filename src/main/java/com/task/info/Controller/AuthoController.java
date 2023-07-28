@@ -75,4 +75,27 @@ public class AuthoController {
         return new ResponseEntity<String>("Task Assigned Succesfully", HttpStatus.OK);
     }
 
+    
+    @PutMapping("/update/empolyee/{emp_id}/{taskid}")
+    public ResponseEntity<Task> updatestatusbyemployee(
+            @PathVariable Integer empid,
+            @RequestParam Integer taskid,
+            @RequestParam boolean completed) {
+        try {
+            Task u = taskservice.updatestatusbyemployee(empid, taskid, completed);
+            return new ResponseEntity<>(u, HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+    }
+
+    @PutMapping("/complete/{taskid}")
+    public ResponseEntity<String> markTaskComplete(@PathVariable Integer taskid) {
+        taskservice.markTaskComplete(taskid);
+        return new ResponseEntity<>("Task Marked as Complete", HttpStatus.OK);
+    }
+
 }

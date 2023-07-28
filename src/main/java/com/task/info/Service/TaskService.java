@@ -45,11 +45,32 @@ public class TaskService {
 
     public void assigntask(Integer taskid, Integer empid, String title, String des, Integer prioritylevel) {
         Task t = tt.findById(taskid).orElseThrow(() -> new IllegalArgumentException("Task not found"));
-        Employee e = ee.findByUserID(empid).orElseThrow(() -> new IllegalArgumentException("Employe not found"));
+        Employee e = ee.findById(empid).orElseThrow(() -> new IllegalArgumentException("Employe not found"));
         t.setAssignedTo(e);
         t.setTitle(title);
         t.setDes(des);
         t.setPrioritylevel(prioritylevel);
         tt.save(t);
+    }
+    public Task updatestatusbyemployee(Integer empid, Integer taskid, boolean completed) {
+        Task t = tt.findByAssignedToIdAndId(empid, taskid);
+
+        t.setCom(completed);
+        return tt.save(t);
+
+    }
+
+    public void markTaskComplete(Integer taskid) {
+        Task t = tt.findById(taskid).orElse(null);
+        if (t != null && !t.isCom()) {
+            t.setCom(true);
+            tt.save(t);
+        }
+
+        CompleteTask c = new CompleteTask();
+        c.setDes(t.getDes());
+        c.setComp(true);
+        c.setCompletionDate(new java.util.Date());
+        com.save(c);
     }
 }

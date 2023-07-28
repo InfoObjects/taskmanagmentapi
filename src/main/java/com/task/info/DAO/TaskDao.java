@@ -8,5 +8,7 @@ import com.task.info.Entity.Task;
 
 @Repository
 public interface TaskDao extends JpaRepository<Task, Integer> {
-    Employee findByUserID(Integer userId);
+    // Employee findByUserID(Integer userId);
+    @Query("SELECT t FROM Task t WHERE t.assignedTo.id = :emp_id AND t.id = :taskId")
+    Task findByAssignedToIdAndId(Integer emp_id, Integer taskId);
 }

@@ -25,11 +25,23 @@ public class Task {
     private String title;
     private String des;
     private Double deadline;
-
+    private boolean com;
     private int prioritylevel;
 
-    // @ManyToOne(fetch = FetchType.LAZY)
-    // @JoinColumn(name = "emp_id")
+    public boolean isCom() {
+        return com;
+    }
+
+    public void setCom(boolean com) {
+        this.com = com;
+    }
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "emp_id")
+    private Employee assignedTo;
+    // @ManyToOne
+    // @JoinColumn(name = "user_id", referencedColumnName = "user_id", insertable =
+    // false, updatable = false)
     // private Employee assignedTo;
 
     public void setAssignedTo(Employee emp) {
