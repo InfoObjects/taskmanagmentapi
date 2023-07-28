@@ -22,6 +22,7 @@ import com.infoobjects.taskspringapp.Services.Taskdetailservice;
 import com.infoobjects.taskspringapp.Services.Taskservice;
 import com.infoobjects.taskspringapp.entities.Employeedetails;
 import com.infoobjects.taskspringapp.entities.Taskdetails;
+import com.infoobjects.taskspringapp.entities.Taskstatus;
 
 @Controller
 @RestController
@@ -101,6 +102,33 @@ public ResponseEntity<String> addEmployee(@RequestBody Employeedetails newEmploy
 }
 
 
+//get employee with id 
+    @GetMapping("/employees/{employeeId}")
+    public ResponseEntity<Employeedetails> getEmployeeById(@PathVariable Long employeeId) {
+        Employeedetails employee = employeeservice.getEmployeeById(employeeId);
+        if (employee != null) {
+            return ResponseEntity.ok(employee);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+
+    //get tasks with id
+    @GetMapping("/tasks/{TaskId}")
+    public ResponseEntity<Taskdetails> getTasksById(@PathVariable Long TaskId)
+    {
+        Taskdetails task = taskservice.getTaskbyId(TaskId);
+        if(task!=null)
+        {
+            return ResponseEntity.ok(task);
+        }
+        else{
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+
 //assign task to employee 
 //  @PostMapping("/{taskId}/assign/{employeeId}")
 //     public ResponseEntity<String> assignTask(@PathVariable Long taskId, @PathVariable Long employeeId) {
@@ -137,6 +165,55 @@ public ResponseEntity<String> addEmployee(@RequestBody Employeedetails newEmploy
      @GetMapping("/employee-by-name")
     public List<Employeedetails> getEmployeesByName(@RequestParam String name) {
         return employeeservice.getEmployeesByName(name);
+    }
+
+    // get employees detail by task id
+    @GetMapping("employees/assign-to-task/{taskId}")
+    public ResponseEntity<List<Employeedetails>> getEmployeeByTaskId(@PathVariable Long taskId)
+    {
+         List<Employeedetails> employees = employeeservice.getEmployeeByTaskId(taskId);
+
+         if(!employees.isEmpty())
+         {
+            return ResponseEntity.ok(employees);
+         }
+         else{
+            return ResponseEntity.notFound().build();
+         }
+
+    }
+
+    //maek task as complete
+    @PutMapping("/{taskId}/complete")
+    public ResponseEntity<String> markTaskAsComplete(@PathVariable long taskId) {
+    
+            taskservice.markTaskAsComplete(taskId);
+
+            return ResponseEntity.ok("Task marked as complete.");
+        
+        // catch (IllegalArgumentException e) {
+        //     return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Task not found or already completed.");
+        // } 
+        // catch (Exception e) {
+        //     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred.");
+        // }
+    }
+
+    //mark task in progress
+    @PutMapping("/{taskId}/inprogress")
+    public ResponseEntity<String> markTaskAsInprogress(@PathVariable  long taskId)
+    {
+        taskservice.markTaskAsInprogress(taskId);
+        return ResponseEntity.ok("Task mared as in progress");
+    }
+
+    //get task by their status
+
+    @GetMapping("/taskstatus/{status}")
+    public ResponseEntity<List<Taskdetails>> getTaskByStatus(@PathVariable Taskstatus status)
+    {
+        List<Taskdetails> tasks = taskservice.getTaskByStatus(status);
+        return ResponseEntity.ok(tasks);
     }
 
 }

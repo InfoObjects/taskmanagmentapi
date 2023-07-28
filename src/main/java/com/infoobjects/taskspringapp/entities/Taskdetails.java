@@ -3,13 +3,14 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 
@@ -26,14 +27,20 @@ public class Taskdetails {
     private int Priority;
 
 
-    @ManyToOne
-    @JoinColumn(name = "employee_id")
-    private Employeedetails employee;
+    // @ManyToOne
+    // @JoinColumn(name = "employee_id")
+    // private Employeedetails employee;
+     
+
+    @Enumerated(EnumType.STRING)
+
+    private Taskstatus status;
 
     @ManyToMany
     @JoinTable(name = "task_employee",
                joinColumns = @JoinColumn(name = "task_id"),
                inverseJoinColumns = @JoinColumn(name = "employee_id"))
+        
     private List<Employeedetails> assignedEmployees;
 
    
@@ -46,10 +53,28 @@ public class Taskdetails {
         this.assignedEmployees = assignedEmployees;
     }
 
+    public List<Employeedetails> getAssignedemployee()
+    {
+        return assignedEmployees;
+    }
+
+    
+
+    public Taskstatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(Taskstatus status) {
+        this.status = status;
+    }
+
+
+   
+
       @Override
     public String toString() {
         return "Taskdetails [id=" + id + ", Title=" + Title + ", Description=" + Description + ", Deadline=" + Deadline
-                + ", Priority=" + Priority + "]";
+                + ", Priority=" + Priority + ", status=" + status + ", assignedEmployees=" + assignedEmployees + "]";
     }
 
     public Taskdetails() {
