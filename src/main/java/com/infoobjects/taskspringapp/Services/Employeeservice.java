@@ -1,10 +1,7 @@
 package com.infoobjects.taskspringapp.Services;
-
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.infoobjects.taskspringapp.Dao.Employeedao;
 import com.infoobjects.taskspringapp.Dao.Taskdao;
 import com.infoobjects.taskspringapp.entities.Employeedetails;
@@ -30,17 +27,17 @@ public class Employeeservice {
         .orElseThrow(() -> new IllegalArgumentException("Invalid employee ID"));
     }
 
-    public List<Employeedetails> getEmployeeByTaskId(Long taskId)
-    {
+    public List<Employeedetails> getEmployeeByTaskId(Long taskId){
         Taskdetails task  = taskdao.findById(taskId).orElse(null);
-
-        if(task!=null)
-        {
+        if(task!=null){
             return task.getAssignedemployee();
         }
         else{
             return null;
         }
     }
+
+   
+
     
 }

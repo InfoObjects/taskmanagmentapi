@@ -9,11 +9,4 @@ public interface Employeedetailservice {
     public List<Employeedetails> getemployee();
 
     public Employeedetails addemployee(Employeedetails newemployee);
-
-
-
-
-
-
-    
 }

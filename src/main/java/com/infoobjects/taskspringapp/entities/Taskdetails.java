@@ -1,7 +1,6 @@
 package com.infoobjects.taskspringapp.entities;
 import java.time.LocalDateTime;
 import java.util.List;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -26,14 +25,7 @@ public class Taskdetails {
     private LocalDateTime Deadline ;//LocalDateTime.of(2023, 7, 31, 17, 0); // July 31, 2023, 5:00 PM
     private int Priority;
 
-
-    // @ManyToOne
-    // @JoinColumn(name = "employee_id")
-    // private Employeedetails employee;
-     
-
     @Enumerated(EnumType.STRING)
-
     private Taskstatus status;
 
     @ManyToMany
@@ -45,9 +37,39 @@ public class Taskdetails {
 
    
 
-    // public void setAssignedTo(Employeedetails assignto) {
-    //     this.employee = assignto;
-    // }
+    @ManyToMany
+    @JoinTable(name = "task_employee_completed",
+               joinColumns = @JoinColumn(name = "task_id"),
+               inverseJoinColumns = @JoinColumn(name = "employee_id"))
+
+               
+    private List<Employeedetails> completedbyEmployees;
+    
+    
+    
+    @ManyToMany
+    @JoinTable(name = "task_employee_in_progress",
+               joinColumns = @JoinColumn(name = "task_id"),
+               inverseJoinColumns = @JoinColumn(name = "employee_id"))
+
+    private List<Employeedetails> inprogressbyEmployees;
+    
+
+    public List<Employeedetails> getInprogressbyEmployees() {
+        return inprogressbyEmployees;
+    }
+
+    public void setInprogressbyEmployees(List<Employeedetails> inprogressbyEmployees) {
+        this.inprogressbyEmployees = inprogressbyEmployees;
+    }
+
+    public List<Employeedetails> getCompletedbyEmployees() {
+        return completedbyEmployees;
+    }
+
+    public void setCompletedbyEmployees(List<Employeedetails> completedbyEmployees) {
+        this.completedbyEmployees = completedbyEmployees;
+    }
 
     public void setAssignedEmployees(List<Employeedetails> assignedEmployees) {
         this.assignedEmployees = assignedEmployees;
@@ -74,7 +96,8 @@ public class Taskdetails {
       @Override
     public String toString() {
         return "Taskdetails [id=" + id + ", Title=" + Title + ", Description=" + Description + ", Deadline=" + Deadline
-                + ", Priority=" + Priority + ", status=" + status + ", assignedEmployees=" + assignedEmployees + "]";
+                + ", Priority=" + Priority + ", status=" + status + ", assignedEmployees=" + assignedEmployees
+                + ", completedbyEmployees=" + completedbyEmployees + "]";
     }
 
     public Taskdetails() {
@@ -137,19 +160,4 @@ public class Taskdetails {
         Priority = priority;
     }
 
-
-   
-
-
-    
-
-
-
-
-
-
-
-
-
-    
 }

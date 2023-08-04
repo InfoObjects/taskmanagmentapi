@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+// import org.springframework.data.jpa.repository.Query;
+// import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Component;
 
 import com.infoobjects.taskspringapp.entities.Taskdetails;
@@ -15,5 +17,13 @@ public interface  Taskdao extends JpaRepository<Taskdetails,String>{
         Optional<Taskdetails> findById(Long taskId);
 
         List<Taskdetails> findByStatus(Taskstatus status);
+
+        List<Taskdetails> findByAssignedEmployees_Id(Long employeeId);
+             
+
+
+//     @Query("SELECT t FROM Taskdetails t JOIN t.assignedEmployees e WHERE e.id = :employeeId")
+//     List<Taskdetails> findByAssignedEmployeeId(@Param("employeeId") Long employeeId);
+
 
 }

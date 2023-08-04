@@ -1,13 +1,13 @@
 package com.infoobjects.taskspringapp.entities;
-
-
-
+import java.util.List;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 
 
 @Entity
@@ -22,7 +22,6 @@ public class Employeedetails {
     private String password;
 
 
-      
     public Employeedetails() {
         super();
     }
@@ -35,7 +34,8 @@ public class Employeedetails {
     }
     @Override
     public String toString() {
-        return "Employeedetails [id=" + id + ", name=" + name + ", email=" + email + ", password=" + password + "]";
+        return "Employeedetails [id=" + id + ", name=" + name + ", email=" + email + ", password=" + password
+                + "]";
     }
     public long getId() {
         return id;

@@ -3,6 +3,7 @@ package com.infoobjects.taskspringapp.Controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -45,6 +46,10 @@ public class MyController {
     @Autowired
     private Employeeservice employeeservice;
    
+
+   
+
+   
     //get task
     @GetMapping("/tasks")
     public List<Taskdetails> gettasks()
@@ -68,29 +73,9 @@ public class MyController {
         return this.employeedetailservice.getemployee();
     }
 
-    // add employee
-    //1
-    // @PostMapping("/employees")
-    // public Employeedetails addemployee(@RequestBody Employeedetails newemployee)
-    // {
-    //     return this.employeedetailservice.addemployee(newemployee);
-    // }
-
-    //2
-//     @PostMapping("/employees")
-// public ResponseEntity<String> addEmployee(@RequestBody Employeedetails newEmployee) {
-//     Employeedetails addedEmployee = employeedetailservice.addemployee(newEmployee);
-//     if (addedEmployee != null) {
-//         return ResponseEntity.ok("Employee successfully added");
-//     } else {
-//         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to add employee");
-//     }
-// }
-
-//3
-@PostMapping("/employees")
-
-public ResponseEntity<String> addEmployee(@RequestBody Employeedetails newEmployee) {
+    // add employeee
+    @PostMapping("/employees")
+    public ResponseEntity<String> addEmployee(@RequestBody Employeedetails newEmployee) {
     // Check if an employee with the same email already exists
     if (employeedao.existsByEmail(newEmployee.getEmail())) {
         return ResponseEntity.badRequest().body("Employee with the same email already exists");
@@ -102,7 +87,7 @@ public ResponseEntity<String> addEmployee(@RequestBody Employeedetails newEmploy
 }
 
 
-//get employee with id 
+   //get employee with id 
     @GetMapping("/employees/{employeeId}")
     public ResponseEntity<Employeedetails> getEmployeeById(@PathVariable Long employeeId) {
         Employeedetails employee = employeeservice.getEmployeeById(employeeId);
@@ -127,22 +112,13 @@ public ResponseEntity<String> addEmployee(@RequestBody Employeedetails newEmploy
             return ResponseEntity.notFound().build();
         }
     }
-
-
-//assign task to employee 
-//  @PostMapping("/{taskId}/assign/{employeeId}")
-//     public ResponseEntity<String> assignTask(@PathVariable Long taskId, @PathVariable Long employeeId) {
-//         taskservice.assignTask(taskId,employeeId);
-//         return ResponseEntity.ok("Task assigned successfully");
-//     }
-
-
- @PostMapping("/{taskId}/assign")
+    //assign tasks
+    @PostMapping("/{taskId}/assign")
     public Taskdetails assignEmployeesToTask(@PathVariable Long taskId, @RequestBody List<Long> employeeIds) {
         return taskservice.assignTask(taskId, employeeIds);
     }
 
-// update task
+    // update task
     @PutMapping("/updatetasks/{taskId}")
     public ResponseEntity<String> updateTask(@PathVariable Long taskId, @RequestBody Taskdetails updatedTask) {
         try {
@@ -153,22 +129,21 @@ public ResponseEntity<String> addEmployee(@RequestBody Employeedetails newEmploy
         }
     }
 
-//delete task
-
- @DeleteMapping("/deletetasks/{taskId}")
+    //delete task
+    @DeleteMapping("/deletetasks/{taskId}")
     public ResponseEntity<String> deleteTask(@PathVariable Long taskId) {
         taskservice.deleteTask(taskId);
         return ResponseEntity.ok("Task deleted successfully");
     }
 
-// find employee by name
+    // find employee by name
      @GetMapping("/employee-by-name")
     public List<Employeedetails> getEmployeesByName(@RequestParam String name) {
         return employeeservice.getEmployeesByName(name);
     }
 
-    // get employees detail by task id
-    @GetMapping("employees/assign-to-task/{taskId}")
+    // get employees detail assigned to tasks by task id
+    @GetMapping("/employees/assign-to-task/{taskId}")
     public ResponseEntity<List<Employeedetails>> getEmployeeByTaskId(@PathVariable Long taskId)
     {
          List<Employeedetails> employees = employeeservice.getEmployeeByTaskId(taskId);
@@ -183,32 +158,43 @@ public ResponseEntity<String> addEmployee(@RequestBody Employeedetails newEmploy
 
     }
 
-    //maek task as complete
-    @PutMapping("/{taskId}/complete")
-    public ResponseEntity<String> markTaskAsComplete(@PathVariable long taskId) {
+    //get task details assigned to employees by employee id
+     @GetMapping("/tasks/assign-to-employee/{employeeId}")
+    public ResponseEntity<List<Taskdetails>> getTasksByEmployeeId(@PathVariable Long employeeId) {
+        try {
+            List<Taskdetails> task = taskservice.getTasksByEmployeeId(employeeId);
+
+            if (!task.isEmpty()) {
+
+                return ResponseEntity.ok(task);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+
     
-            taskservice.markTaskAsComplete(taskId);
+
+    //mark task as complete
+    @PostMapping("/{taskId}/complete")
+    public ResponseEntity<String> markTaskAsComplete(@PathVariable Long taskId , @RequestBody List<Long> employeeIds) {
+    
+            taskservice.markTaskAsComplete(taskId,employeeIds);
 
             return ResponseEntity.ok("Task marked as complete.");
-        
-        // catch (IllegalArgumentException e) {
-        //     return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Task not found or already completed.");
-        // } 
-        // catch (Exception e) {
-        //     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred.");
-        // }
     }
 
     //mark task in progress
-    @PutMapping("/{taskId}/inprogress")
-    public ResponseEntity<String> markTaskAsInprogress(@PathVariable  long taskId)
+    @PostMapping("/{taskId}/inprogress")
+    public ResponseEntity<String> markTaskAsInprogress(@PathVariable  long taskId ,@RequestParam Long employeeId)
     {
-        taskservice.markTaskAsInprogress(taskId);
-        return ResponseEntity.ok("Task mared as in progress");
+        taskservice.markTaskAsInprogress(taskId,employeeId);
+        return ResponseEntity.ok("Task marked as in progress");
     }
 
     //get task by their status
-
     @GetMapping("/taskstatus/{status}")
     public ResponseEntity<List<Taskdetails>> getTaskByStatus(@PathVariable Taskstatus status)
     {

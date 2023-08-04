@@ -39,6 +39,4 @@ public class Employeedetailserviceimpl implements Employeedetailservice{
         employeedao.save(newemployee);
         return newemployee;
     }
-   
-  
 }
