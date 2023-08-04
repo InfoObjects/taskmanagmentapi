@@ -2,6 +2,9 @@ package com.task.info.Controller;
 
 import java.util.List;
 
+import org.aspectj.lang.annotation.AfterReturning;
+
+import java.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -75,14 +79,13 @@ public class AuthoController {
         return new ResponseEntity<String>("Task Assigned Succesfully", HttpStatus.OK);
     }
 
-    
-    @PutMapping("/update/empolyee/{emp_id}/{taskid}")
+    @PutMapping("/update/empolyee/{empid}")
     public ResponseEntity<Task> updatestatusbyemployee(
             @PathVariable Integer empid,
             @RequestParam Integer taskid,
-            @RequestParam boolean completed) {
+            @RequestParam String status) {
         try {
-            Task u = taskservice.updatestatusbyemployee(empid, taskid, completed);
+            Task u = taskservice.updatestatusbyemployee(empid, taskid, status);
             return new ResponseEntity<>(u, HttpStatus.OK);
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -96,6 +99,12 @@ public class AuthoController {
     public ResponseEntity<String> markTaskComplete(@PathVariable Integer taskid) {
         taskservice.markTaskComplete(taskid);
         return new ResponseEntity<>("Task Marked as Complete", HttpStatus.OK);
+    }
+
+    @GetMapping("/task/status")
+    public ResponseEntity<List<Map<String, Object>>> getAllTaskStatus() {
+        List<Map<String, Object>> tasklist = taskservice.getAllTaskStatus();
+        return new ResponseEntity<>(tasklist, HttpStatus.OK);
     }
 
 }

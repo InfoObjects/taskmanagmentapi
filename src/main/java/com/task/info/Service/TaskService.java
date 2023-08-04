@@ -1,15 +1,20 @@
 package com.task.info.Service;
 
+import java.sql.Date;
 import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
+import com.task.info.DAO.CompleteDao;
 import com.task.info.DAO.EmployeeDao;
 import com.task.info.DAO.TaskDao;
+import com.task.info.DAO.TaskStatusDao;
+import com.task.info.Entity.CompleteTask;
 import com.task.info.Entity.Employee;
 import com.task.info.Entity.Task;
+import com.task.info.Entity.TaskStatus;
 
 import jakarta.transaction.Transactional;
 
@@ -19,9 +24,12 @@ import jakarta.transaction.Transactional;
 public class TaskService {
     @Autowired
     private EmployeeDao ee;
-
+    @Autowired
+    private TaskStatusDao f;
     @Autowired
     private TaskDao tt;
+    @Autowired
+    private CompleteDao com;
 
     private static List<Task> list = new ArrayList<>();
 
@@ -39,7 +47,11 @@ public class TaskService {
     // }
     public void addtask(Task task) {
         // list.add(e);
-        tt.save(task);
+        Task savedTask = tt.save(task);
+        TaskStatus taskstatus = new TaskStatus();
+        taskstatus.setId(savedTask.getTaskid());
+        taskstatus.setStatus(savedTask.getStatus());
+        f.save(taskstatus);
 
     }
 
@@ -52,11 +64,17 @@ public class TaskService {
         t.setPrioritylevel(prioritylevel);
         tt.save(t);
     }
-    public Task updatestatusbyemployee(Integer empid, Integer taskid, boolean completed) {
+
+    public Task updatestatusbyemployee(Integer empid, Integer taskid, String completed) {
         Task t = tt.findByAssignedToIdAndId(empid, taskid);
 
-        t.setCom(completed);
-        return tt.save(t);
+        if (t != null) {
+            t.setStatus(completed);
+            return tt.save(t);
+        } else {
+
+            throw new IllegalArgumentException("Task not found");
+        }
 
     }
 
@@ -73,4 +91,19 @@ public class TaskService {
         c.setCompletionDate(new java.util.Date());
         com.save(c);
     }
+
+    public List<Map<String, Object>> getAllTaskStatus() {
+        List<Task> tasks = tt.findAll();
+        List<Map<String, Object>> taskStatusList = new ArrayList<>();
+
+        for (Task task : tasks) {
+            Map<String, Object> taskStatus = new HashMap<>();
+            taskStatus.put("taskId", task.getTaskid());
+            taskStatus.put("status", task.getStatus());
+            taskStatusList.add(taskStatus);
+        }
+
+        return taskStatusList;
+    }
+
 }
