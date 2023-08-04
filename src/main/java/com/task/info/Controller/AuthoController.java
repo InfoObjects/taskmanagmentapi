@@ -23,6 +23,8 @@ import com.task.info.Entity.Task;
 import com.task.info.Service.EmployeService;
 import com.task.info.Service.TaskService;
 
+import jakarta.persistence.EntityNotFoundException;
+
 @Controller // on presentation layer
 @RestController
 @RequestMapping("/api/auth")
@@ -89,6 +91,8 @@ public class AuthoController {
             return new ResponseEntity<>(u, HttpStatus.OK);
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.notFound().build();
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }

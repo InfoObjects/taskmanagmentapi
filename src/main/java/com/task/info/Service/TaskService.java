@@ -3,6 +3,7 @@ package com.task.info.Service;
 import java.sql.Date;
 import java.util.*;
 
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
@@ -49,8 +50,10 @@ public class TaskService {
         // list.add(e);
         Task savedTask = tt.save(task);
         TaskStatus taskstatus = new TaskStatus();
-        taskstatus.setId(savedTask.getTaskid());
-        taskstatus.setStatus(savedTask.getStatus());
+        System.out.println(savedTask);
+        taskstatus.setTask(savedTask);
+        taskstatus.setDescription(savedTask.getDes());
+        taskstatus.setStatus(savedTask.getCom());
         f.save(taskstatus);
 
     }
@@ -67,6 +70,10 @@ public class TaskService {
 
     public Task updatestatusbyemployee(Integer empid, Integer taskid, String completed) {
         Task t = tt.findByAssignedToIdAndId(empid, taskid);
+
+        if (!Hibernate.isInitialized(t)) {
+            Hibernate.initialize(t);
+        }
 
         if (t != null) {
             t.setStatus(completed);
