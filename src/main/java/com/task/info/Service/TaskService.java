@@ -113,4 +113,10 @@ public class TaskService {
         return taskStatusList;
     }
 
+    public void deleteTask(Integer taskid) {
+        Task task = tt.findById(taskid)
+                .orElseThrow(() -> new IllegalArgumentException("Task not found with ID: " + taskid));
+        tt.delete(task);
+    }
+
 }

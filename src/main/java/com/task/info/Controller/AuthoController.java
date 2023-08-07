@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -109,6 +110,19 @@ public class AuthoController {
     public ResponseEntity<List<Map<String, Object>>> getAllTaskStatus() {
         List<Map<String, Object>> tasklist = taskservice.getAllTaskStatus();
         return new ResponseEntity<>(tasklist, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/delete/{taskid}")
+    public ResponseEntity<String> deleteTask(@PathVariable Integer taskid) {
+        try {
+            taskservice.deleteTask(taskid);
+            return new ResponseEntity<String>("Task Deleted Succesfully", HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<String>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            return new ResponseEntity<String>("Error occurred while deleting the task",
+                    HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
 }
