@@ -15,6 +15,8 @@ import jakarta.transaction.Transactional;
 @Service
 @Transactional
 public class EmployeService {
+    // @Autowired
+    // private Employee emp;
     @Autowired
     private EmployeeDao dao;
     private static List<Employee> list = new ArrayList<>();
@@ -34,7 +36,11 @@ public class EmployeService {
         if (dao.existsByEmail(email)) {
             throw new IllegalArgumentException("Email is already taken");
         } else {
+
+            task.setId(task.getId());
+
             dao.save(task);
+            System.out.println(task);
         }
     }
 

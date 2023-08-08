@@ -62,8 +62,12 @@ public class TaskService {
         Task t = tt.findById(taskid).orElseThrow(() -> new IllegalArgumentException("Task not found"));
         Employee e = ee.findById(empid).orElseThrow(() -> new IllegalArgumentException("Employe not found"));
         t.setAssignedTo(e);
-        t.setTitle(title);
-        t.setDes(des);
+        if (title != null) {
+            t.setTitle(title);
+        }
+        if (des != null) {
+            t.setDes(des);
+        }
         t.setPrioritylevel(prioritylevel);
         tt.save(t);
     }

@@ -30,6 +30,7 @@ import jakarta.persistence.EntityNotFoundException;
 @RestController
 @RequestMapping("/api/auth")
 public class AuthoController {
+
     @Autowired
     private TaskService taskservice;
     @Autowired
@@ -56,15 +57,16 @@ public class AuthoController {
         return this.em.getAllEmployees();
     }
 
-    @PostMapping("/signup")
-    public Employee add(@RequestBody Employee emp) {
-        this.em.addEmployee(emp);
-        return emp;
-    }
+    // @PostMapping("/signup")
+    // public Employee add(@RequestBody Employee emp) {
+    // this.em.addEmployee(emp);
+    // return emp;
+    // }
 
     @PostMapping("/signin")
     public ResponseEntity<String> addEmployee(@RequestBody Employee emp) {
         try {
+
             em.addEmployee(emp);
             return new ResponseEntity<String>("Succesfully", HttpStatus.CREATED);
         } catch (IllegalArgumentException e) {
@@ -74,9 +76,9 @@ public class AuthoController {
 
     @PostMapping("/tasks/{taskid}/assign/{empid}")
     public ResponseEntity<String> assigntask(@PathVariable Integer taskid, @PathVariable Integer empid,
-            @RequestParam String title,
-            @RequestParam String des,
-            @RequestParam Integer priority) {
+            @RequestParam(required = false) String title,
+            @RequestParam(required = false) String des,
+            @RequestParam(required = false) Integer priority) {
 
         taskservice.assigntask(taskid, empid, title, des, priority);
         return new ResponseEntity<String>("Task Assigned Succesfully", HttpStatus.OK);

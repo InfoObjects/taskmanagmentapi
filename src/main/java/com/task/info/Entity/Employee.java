@@ -7,17 +7,21 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 //for employees information
 @Entity
+@Table(name = "employee")
 @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 public class Employee {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private int id;
-
+    @Column(nullable = false)
     private String email;
+    @Column(nullable = false)
     private String name;
+    @Column(nullable = false)
     private String password;
 
     @Override

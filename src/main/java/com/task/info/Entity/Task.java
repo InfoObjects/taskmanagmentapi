@@ -5,6 +5,7 @@ import org.springframework.data.repository.query.Param;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -30,7 +31,9 @@ public class Task {
         this.taskid = taskid;
     }
 
+    @Column(nullable = false)
     private String title;
+    @Column(nullable = false)
     private String des;
     private Double deadline;
     private boolean com;
