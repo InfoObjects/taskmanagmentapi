@@ -118,6 +118,20 @@ public class MyController {
         return taskservice.assignTask(taskId, employeeIds);
     }
 
+
+    //update employee
+    @PutMapping("/updateemployees/{employeeId}")
+    public ResponseEntity<String> updateEmployee(@PathVariable Long employeeId, @RequestBody Employeedetails updatedEmployee)
+    {
+        try{
+            employeeservice.updatedEmployee(employeeId,updatedEmployee);
+            return ResponseEntity.ok("Employee updated sucessfully");
+        }
+        catch(IllegalArgumentException e)
+        {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
     // update task
     @PutMapping("/updatetasks/{taskId}")
     public ResponseEntity<String> updateTask(@PathVariable Long taskId, @RequestBody Taskdetails updatedTask) {
@@ -129,8 +143,17 @@ public class MyController {
         }
     }
 
+
+    //delete employee
+    @DeleteMapping("/deleteemployee/{employeeId}")
+    public ResponseEntity<String> deleteemployee(@PathVariable Long employeeId)
+    {
+        employeeservice.deleteemployee(employeeId);
+        return ResponseEntity.ok("employee deleted sucessfully");
+    }
+
     //delete task
-    @DeleteMapping("/deletetasks/{taskId}")
+    @DeleteMapping("/deletetask/{taskId}")
     public ResponseEntity<String> deleteTask(@PathVariable Long taskId) {
         taskservice.deleteTask(taskId);
         return ResponseEntity.ok("Task deleted successfully");
@@ -142,11 +165,12 @@ public class MyController {
         return employeeservice.getEmployeesByName(name);
     }
 
+
     // get employees detail assigned to tasks by task id
     @GetMapping("/employees/assign-to-task/{taskId}")
-    public ResponseEntity<List<Employeedetails>> getEmployeeByTaskId(@PathVariable Long taskId)
+    public ResponseEntity<List<Employeedetails>> getAssignedEmployeeByTaskId(@PathVariable Long taskId)
     {
-         List<Employeedetails> employees = employeeservice.getEmployeeByTaskId(taskId);
+         List<Employeedetails> employees = employeeservice.getAssignedEmployeeByTaskId(taskId);
 
          if(!employees.isEmpty())
          {
@@ -160,9 +184,9 @@ public class MyController {
 
     //get task details assigned to employees by employee id
      @GetMapping("/tasks/assign-to-employee/{employeeId}")
-    public ResponseEntity<List<Taskdetails>> getTasksByEmployeeId(@PathVariable Long employeeId) {
+    public ResponseEntity<List<Taskdetails>> getAssignedTasksByEmployeeId(@PathVariable Long employeeId) {
         try {
-            List<Taskdetails> task = taskservice.getTasksByEmployeeId(employeeId);
+            List<Taskdetails> task = taskservice.getAssignedTasksByEmployeeId(employeeId);
 
             if (!task.isEmpty()) {
 
@@ -202,4 +226,25 @@ public class MyController {
         return ResponseEntity.ok(tasks);
     }
 
+
+
+    
+     // //get employee details by whom the task was completed by {task id}
+    @GetMapping("/employees/whocompleted/task/{taskId}") 
+    public ResponseEntity<List<Employeedetails>> getEmployeesByCompletedTask(@PathVariable Long taskId)
+    {
+        List<Employeedetails> employees = employeeservice.getEmployeesByCompletedTask(taskId);
+        return new ResponseEntity<>(employees, HttpStatus.OK);
+ 
+    }
+   
+    // get tasks on the basis of priority
+    // @GetMapping("/tasks-by-priority/{priority}")
+    // public ResponseEntity<List<Taskdetails>> getTasksbyPriority(@PathVariable int priority)
+    // {
+    //     List<Taskdetails> taskdetails = taskservice.getTasksByPriority(priority);
+    //     return ResponseEntity.ok(taskdetails);
+    // }
+    
 }
+

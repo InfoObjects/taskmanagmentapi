@@ -19,11 +19,8 @@ public interface  Taskdao extends JpaRepository<Taskdetails,String>{
         List<Taskdetails> findByStatus(Taskstatus status);
 
         List<Taskdetails> findByAssignedEmployees_Id(Long employeeId);
+
+        // List<Taskdetails> findTasksByPriority(int priority);
              
-
-
-//     @Query("SELECT t FROM Taskdetails t JOIN t.assignedEmployees e WHERE e.id = :employeeId")
-//     List<Taskdetails> findByAssignedEmployeeId(@Param("employeeId") Long employeeId);
-
 
 }

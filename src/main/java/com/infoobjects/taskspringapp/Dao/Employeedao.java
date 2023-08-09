@@ -18,7 +18,4 @@ public interface Employeedao extends JpaRepository<Employeedetails,Long>{
      Optional<Employeedetails> findById(Long taskId);
 
 
-     // List<Employeedetails> findByCompletedTasks_Id(Long taskId);
-
-
 }

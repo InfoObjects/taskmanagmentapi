@@ -52,7 +52,6 @@ public class Taskservice {
         Taskdetails existingTask = taskdao.findById(taskId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid task ID"));
 
-        // Update the tasks with the new values
         existingTask.setTitle(updatedTask.getTitle());
         existingTask.setDescription(updatedTask.getDescription());
         existingTask.setDeadline(updatedTask.getDeadline());
@@ -84,13 +83,11 @@ public class Taskservice {
     }
 
 
-   public List<Taskdetails> getTasksByEmployeeId(Long employeeId) {
+   public List<Taskdetails> getAssignedTasksByEmployeeId(Long employeeId) {
    
     return taskdao.findByAssignedEmployees_Id(employeeId);
      }
 
-
-  
 
 
     public void markTaskAsComplete(Long taskId ,List<Long> employeeIds) {
@@ -136,4 +133,8 @@ public class Taskservice {
 
     }
 
+    // public List<Taskdetails> getTasksByPriority(int priority)
+    // {
+    //     return taskdao.findTasksByPriority(priority);
+    // }
 }

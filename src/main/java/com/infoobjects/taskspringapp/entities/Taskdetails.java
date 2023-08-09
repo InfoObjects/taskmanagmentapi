@@ -25,6 +25,15 @@ public class Taskdetails {
     private LocalDateTime Deadline ;//LocalDateTime.of(2023, 7, 31, 17, 0); // July 31, 2023, 5:00 PM
     private int Priority;
 
+    public int getPriority() {
+        return Priority;
+    }
+
+    public void setPriority(int priority) {
+        Priority = priority;
+    }
+
+
     @Enumerated(EnumType.STRING)
     private Taskstatus status;
 
@@ -97,7 +106,8 @@ public class Taskdetails {
     public String toString() {
         return "Taskdetails [id=" + id + ", Title=" + Title + ", Description=" + Description + ", Deadline=" + Deadline
                 + ", Priority=" + Priority + ", status=" + status + ", assignedEmployees=" + assignedEmployees
-                + ", completedbyEmployees=" + completedbyEmployees + "]";
+                + ", completedbyEmployees=" + completedbyEmployees + ", inprogressbyEmployees=" + inprogressbyEmployees
+                + "]";
     }
 
     public Taskdetails() {
@@ -151,13 +161,6 @@ public class Taskdetails {
     }
 
 
-    public int getPriority() {
-        return Priority;
-    }
-
-
-    public void setPriority(int priority) {
-        Priority = priority;
-    }
+   
 
 }

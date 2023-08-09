@@ -27,7 +27,7 @@ public class Employeeservice {
         .orElseThrow(() -> new IllegalArgumentException("Invalid employee ID"));
     }
 
-    public List<Employeedetails> getEmployeeByTaskId(Long taskId){
+    public List<Employeedetails> getAssignedEmployeeByTaskId(Long taskId){
         Taskdetails task  = taskdao.findById(taskId).orElse(null);
         if(task!=null){
             return task.getAssignedemployee();
@@ -37,7 +37,37 @@ public class Employeeservice {
         }
     }
 
-   
+    public List<Employeedetails> getEmployeesByCompletedTask(Long taskId)
+    {
+         Taskdetails task  = taskdao.findById(taskId).orElse(null);
+        if(task!=null){
+            return task.getCompletedbyEmployees();
+        }
+        else{
+            return null;
+        }
+    }
 
+    public void updatedEmployee(Long employeeId, Employeedetails updatedEmployee)
+    {
+        Employeedetails existingEmployee = employeedao.findById(employeeId)
+        .orElseThrow(() -> new IllegalArgumentException("Invalid employee ID"));
+
+        existingEmployee.setName(updatedEmployee.getName());
+        existingEmployee.setEmail(updatedEmployee.getEmail());
+        existingEmployee.setPassword(updatedEmployee.getPassword());
+
+        employeedao.save(existingEmployee);
+
+    }
+
+
+    public void deleteemployee(Long employeeId)
+    {
+        Employeedetails employee = employeedao.findById(employeeId)
+             .orElseThrow(() -> new IllegalArgumentException("Invalid employee ID"));
+
+        employeedao.delete(employee);
+    }
     
 }
