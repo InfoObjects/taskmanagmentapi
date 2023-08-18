@@ -19,8 +19,8 @@ public class Employeedetailserviceimpl implements Employeedetailservice{
 
     public Employeedetailserviceimpl(){
        list1= new ArrayList<>();
-        list1.add(new Employeedetails(12,"name 1", "name1@gmail.com","123"));
-        list1.add(new Employeedetails(13,"name 2", "name2@gmail.com","321"));    
+        // list1.add(new Employeedetails(11, "name1", "name1@gmail.com", "123"));
+        // list1.add(new Employeedetails(12, "name2", "name2@gmail.com", "123"));    
     }
 
     @Override
@@ -36,7 +36,17 @@ public class Employeedetailserviceimpl implements Employeedetailservice{
 
         // list1.add(newemployee);
         // return newemployee;
-        employeedao.save(newemployee);
+
+        String newemail = newemployee.getEmail();
+        if(employeedao.existsByEmail(newemail))
+        {
+            throw new IllegalArgumentException("Email is already exist or duplicate email");
+        }
+        else
+        {
+            newemployee.setId(newemployee.getId());
+            employeedao.save(newemployee);
+        }
         return newemployee;
     }
 }

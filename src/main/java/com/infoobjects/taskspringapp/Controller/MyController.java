@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.infoobjects.taskspringapp.Dao.Employeedao;
 import com.infoobjects.taskspringapp.Services.Employeedetailservice;
 import com.infoobjects.taskspringapp.Services.Employeeservice;
 import com.infoobjects.taskspringapp.Services.Taskdetailservice;
@@ -30,9 +29,6 @@ import com.infoobjects.taskspringapp.entities.Taskstatus;
 @RequestMapping("/api/auth")
 public class MyController {
 
-
-    @Autowired
-    private Employeedao employeedao;
 
     @Autowired
     private Taskdetailservice taskdetailservice;
@@ -76,15 +72,15 @@ public class MyController {
     // add employeee
     @PostMapping("/employees")
     public ResponseEntity<String> addEmployee(@RequestBody Employeedetails newEmployee) {
-    // Check if an employee with the same email already exists
-    if (employeedao.existsByEmail(newEmployee.getEmail())) {
-        return ResponseEntity.badRequest().body("Employee with the same email already exists");
-    }
+        try {
+            employeedetailservice.addemployee(newEmployee);
 
-    // Save the new employee
-    employeedao.save(newEmployee);
-    return ResponseEntity.ok("Employee added successfully");
-}
+            return new ResponseEntity<String>("Employee addedd Succesfully", HttpStatus.CREATED);
+        } 
+        catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
 
 
    //get employee with id 
