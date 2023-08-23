@@ -1,7 +1,5 @@
 package com.task.info.Controller;
 
-import java.util.List;
-
 import org.aspectj.lang.annotation.AfterReturning;
 
 import java.util.*;
@@ -127,4 +125,14 @@ public class AuthoController {
         }
     }
 
+    @PostMapping("/generate-employee-task-summary")
+    public ResponseEntity<String> generateEmployeeTaskSummary() {
+        try {
+            taskservice.generatedEmployeeTaskSummary();
+            return new ResponseEntity<>("Employee task summary generated successfully.", HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Failed to generate employee task summary: " + e.getMessage(),
+                    HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }

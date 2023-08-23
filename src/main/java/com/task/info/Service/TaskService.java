@@ -1,6 +1,5 @@
 package com.task.info.Service;
 
-import java.sql.Date;
 import java.util.*;
 
 import org.hibernate.Hibernate;
@@ -10,12 +9,14 @@ import org.springframework.stereotype.Service;
 
 import com.task.info.DAO.CompleteDao;
 import com.task.info.DAO.EmployeeDao;
+import com.task.info.DAO.EmployeeTaskSummaryDao;
 import com.task.info.DAO.TaskDao;
 import com.task.info.DAO.TaskStatusDao;
 import com.task.info.Entity.CompleteTask;
 import com.task.info.Entity.Employee;
 import com.task.info.Entity.Task;
 import com.task.info.Entity.TaskStatus;
+import com.task.info.Entity.Employeetasksummary;
 
 import jakarta.transaction.Transactional;
 
@@ -31,6 +32,8 @@ public class TaskService {
     private TaskDao tt;
     @Autowired
     private CompleteDao com;
+    @Autowired
+    private EmployeeTaskSummaryDao emp;
 
     private static List<Task> list = new ArrayList<>();
 
@@ -123,4 +126,30 @@ public class TaskService {
         tt.delete(task);
     }
 
+    public void generatedEmployeeTaskSummary() {
+        List<Employee> employees = ee.findAll();
+        for (Employee employee : employees) {
+            Integer employeeId = employee.getId();
+            String employeeName = employee.getName();
+
+            List<Task> tasksByEmployee = tt.findByAssignedToId(employeeId);
+            Long totalTasksDone = tasksByEmployee.stream()
+                    .filter(Task::isCom) // Assuming 'isCom' represents completed status
+                    .count();
+
+            for (Task task : tasksByEmployee) {
+                if (task.isCom()) { // Only process completed tasks
+                    String taskTitle = task.getTitle();
+                    Employeetasksummary summary = new Employeetasksummary();
+                    summary.setEmployeeid(employeeId);
+                    summary.setEmployeename(employeeName);
+                    summary.setTasktitle(taskTitle);
+                    summary.setTotalTaskDone(totalTasksDone);
+
+                    emp.save(summary);
+                }
+            }
+
+        }
+    }
 }
